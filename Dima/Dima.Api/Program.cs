@@ -1,9 +1,10 @@
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
-app.MapPost("/", () => "Hello World!");
-app.MapPut("/", () => "Hello World!");
-app.MapDelete("/", () => "Hello World!");
+app.MapGet("/v1/categories", () => "Hello World!");
+app.MapGet("/v2/categories", () => "Hello World!");
+app.MapPost("/v1/categories", () => "Hello World!");
+app.MapPut("/v1/categories", () => "Hello World!");
+app.MapDelete("/v1/categories", () => "Hello World!");
 
 app.Run();
