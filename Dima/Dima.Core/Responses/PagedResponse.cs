@@ -14,7 +14,7 @@ public class PagedResponse<TData> : Response<TData>
         PageSize = pageSize;
     }
 
-    public PagedResponse(TData? data, int code = Configuration.DefaultStatusCode, string message = null)
+    public PagedResponse(TData? data, int code = Configuration.DefaultStatusCode, string? message = null)
         :base(data, code, message)
     {
         
