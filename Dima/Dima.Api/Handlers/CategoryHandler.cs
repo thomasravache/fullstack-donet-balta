@@ -22,7 +22,10 @@ public class CategoryHandler : ICategoryHandler
         await _context.Categories.AddAsync(category);
         await _context.SaveChangesAsync();
 
-        return new Response<CategoryResponse>(category.ToResponse(), StatusCodes.Status200OK);
+        return new Response<CategoryResponse>(
+            category.ToResponse(),
+            StatusCodes.Status200OK,
+            "Categoria criada com sucesso!");
     }
 
     public Task<Response<CategoryResponse>> DeleteAsync(DeleteCategoryRequest request)
