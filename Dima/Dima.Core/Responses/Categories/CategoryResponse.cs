@@ -1,3 +1,5 @@
+using Dima.Core.Models;
+
 namespace Dima.Core.Responses.Categories;
 
 public class CategoryResponse
