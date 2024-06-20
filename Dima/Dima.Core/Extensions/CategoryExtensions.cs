@@ -22,4 +22,12 @@ public static class CategoryExtensions
             Title = request.Title,
             UserId = request.UserId
         };
+
+    public static void FillModel(this Category model, UpdateCategoryRequest request)
+    {
+        model.Description = request.Description;
+        model.Id = request.Id;
+        model.Title = request.Title;
+        model.UserId = request.UserId;
+    }
 }
