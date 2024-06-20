@@ -35,11 +35,20 @@ app.MapPost("/v1/categories", ([FromBody] CreateCategoryRequest request, ICatego
     .WithName("Categories: Create")
     .WithSummary("Cria uma categoria")
     .Produces<Response<CategoryResponse>>();
-app.MapGet("/v2/categories", () => "Hello World!");
-app.MapPut("/v1/categories", ([FromBody] UpdateCategoryRequest request, ICategoryHandler handler) => handler.UpdateAsync(request))
+
+app.MapPut("/v1/categories/{id}", (long id, UpdateCategoryRequest request, ICategoryHandler handler) => 
+{
+    request.Id = id;
+    handler.UpdateAsync(request);
+})
     .WithName("Categories: Update")
     .WithSummary("Edita uma categoria")
     .Produces<Response<CategoryResponse?>>();
-app.MapDelete("/v1/categories", () => "Hello World!");
+
+app.MapDelete("/v1/categories/{id}", ([FromRoute] long id, [FromBody] DeleteCategoryRequest request, ICategoryHandler handler) => 
+{
+    request.Id = id;
+    handler.DeleteAsync(request);
+});
 
 app.Run();
