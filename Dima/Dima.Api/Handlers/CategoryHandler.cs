@@ -40,7 +40,7 @@ public class CategoryHandler : ICategoryHandler
         _context.Categories.Remove(category);
         await _context.SaveChangesAsync();
 
-        return new Response<CategoryResponse?>(null, message: "Categoria Removida com sucesso!");
+        return new Response<CategoryResponse?>(category.ToResponse(), message: "Categoria removida com sucesso!");
     }
 
     public async Task<PagedResponse<List<CategoryResponse>>> GetAllAsync(GetAllCategoriesRequest request)

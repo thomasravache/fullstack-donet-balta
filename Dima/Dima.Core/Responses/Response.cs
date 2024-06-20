@@ -29,6 +29,7 @@ public class Response<TData>
 
     public TData? Data { get; set; }
     public List<string> Messages { get; set; } = [];
+    public string? PrincipalMessage => Messages.FirstOrDefault();
 
     public bool IsSuccess => _code is >= 200 and <= 299;
 }

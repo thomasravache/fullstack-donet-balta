@@ -31,24 +31,24 @@ var app = builder.Build();
 app.UseSwagger(); // informa que iremos utilizar o swagger
 app.UseSwaggerUI(); // informa que iremos utilizar a UI do swagger
 
-app.MapPost("/v1/categories", ([FromBody] CreateCategoryRequest request, ICategoryHandler handler) => handler.CreateAsync(request))
+app.MapPost("/v1/categories", async ([FromBody] CreateCategoryRequest request, ICategoryHandler handler) => await handler.CreateAsync(request))
     .WithName("Categories: Create")
     .WithSummary("Cria uma categoria")
     .Produces<Response<CategoryResponse>>();
 
-app.MapPut("/v1/categories/{id}", (long id, UpdateCategoryRequest request, ICategoryHandler handler) => 
+app.MapPut("/v1/categories/{id}", async (long id, UpdateCategoryRequest request, ICategoryHandler handler) => 
 {
     request.Id = id;
-    handler.UpdateAsync(request);
+    return await handler.UpdateAsync(request);
 })
     .WithName("Categories: Update")
     .WithSummary("Edita uma categoria")
     .Produces<Response<CategoryResponse?>>();
 
-app.MapDelete("/v1/categories/{id}", ([FromRoute] long id, [FromBody] DeleteCategoryRequest request, ICategoryHandler handler) => 
+app.MapDelete("/v1/categories/{id}", async ([FromRoute] long id, [FromBody] DeleteCategoryRequest request, ICategoryHandler handler) => 
 {
     request.Id = id;
-    handler.DeleteAsync(request);
+    return await handler.DeleteAsync(request);
 });
 
 app.Run();
