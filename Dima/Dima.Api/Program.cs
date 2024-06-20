@@ -45,10 +45,24 @@ app.MapPut("/v1/categories/{id}", async (long id, UpdateCategoryRequest request,
     .WithSummary("Edita uma categoria")
     .Produces<Response<CategoryResponse?>>();
 
+app.MapGet("/v1/categories/{id}", async ([FromRoute] long id, [FromBody] GetCategoryByIdRequest request, ICategoryHandler handler) => 
+{
+    request.Id = id;
+    return await handler.GetByIdAsync(request);
+})
+    .WithName("Categories: GetById")
+    .WithSummary("Obtém uma categoria por Id")
+    .Produces<Response<CategoryResponse?>>();;
+
+app.Run();
+
 app.MapDelete("/v1/categories/{id}", async ([FromRoute] long id, [FromBody] DeleteCategoryRequest request, ICategoryHandler handler) => 
 {
     request.Id = id;
     return await handler.DeleteAsync(request);
-});
+})
+    .WithName("Categories: Delete")
+    .WithSummary("Deleta uma categoria")
+    .Produces<Response<CategoryResponse?>>();;
 
 app.Run();

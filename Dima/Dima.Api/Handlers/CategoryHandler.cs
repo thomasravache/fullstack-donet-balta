@@ -46,6 +46,7 @@ public class CategoryHandler : ICategoryHandler
     public async Task<PagedResponse<List<CategoryResponse>>> GetAllAsync(GetAllCategoriesRequest request)
     {
         var categories = await _context.Categories
+            .AsNoTracking()
             .Where(x => x.UserId == request.UserId)
             .Select(x => x.ToResponse())
             .Skip((request.PageNumber - 1) * request.PageSize)
@@ -58,12 +59,12 @@ public class CategoryHandler : ICategoryHandler
     public async Task<Response<CategoryResponse?>> GetByIdAsync(GetCategoryByIdRequest request)
     {
         var category = await _context.Categories
+            .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == request.Id && request.UserId == x.UserId);
 
-        if (category is null)
-            return new Response<CategoryResponse?>(null, StatusCodes.Status404NotFound, "Categoria não encontrada");
-        
-        return new Response<CategoryResponse?>(category.ToResponse());
+        return category is null
+            ? new Response<CategoryResponse?>(null, StatusCodes.Status404NotFound, "Categoria não encontrada")
+            : new Response<CategoryResponse?>(category.ToResponse());
     }
 
     public async Task<Response<CategoryResponse?>> UpdateAsync(UpdateCategoryRequest request)
