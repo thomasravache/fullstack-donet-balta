@@ -1,6 +1,8 @@
-namespace Dima.Core.Models;
+using Dima.Core.Models;
 
-public class Category
+namespace Dima.Core.Responses.Categories;
+
+public class CategoryResponse
 {
     public long Id { get; set; }
     public string Title { get; set; } = string.Empty;

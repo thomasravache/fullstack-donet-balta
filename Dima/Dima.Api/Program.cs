@@ -1,4 +1,10 @@
+using Azure;
 using Dima.Api.Data;
+using Dima.Api.Handlers;
+using Dima.Core.Handlers;
+using Dima.Core.Requests.Categories;
+using Dima.Core.Responses.Categories;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,17 +22,21 @@ builder.Services.AddDbContext<AppDbContext>(x =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(x =>
 {
-x.CustomSchemaIds(n => n.FullName); // Pega o nome das classes para documentação, evitando conflitos entre nomes iguais de classes
+    x.CustomSchemaIds(n => n.FullName); // Pega o nome das classes para documentação, evitando conflitos entre nomes iguais de classes
 });
+builder.Services.AddTransient<ICategoryHandler, CategoryHandler>();
 
 var app = builder.Build();
 
 app.UseSwagger(); // informa que iremos utilizar o swagger
 app.UseSwaggerUI(); // informa que iremos utilizar a UI do swagger
 
-app.MapGet("/v1/categories", () => "Hello World!");
+app.MapPost("/v1/categories", ([FromBody] CreateCategoryRequest request, ICategoryHandler handler) => handler.CreateAsync(request))
+    .WithName("Categories: Create")
+    .WithSummary("Cria uma categoria")
+    .Produces<Response<CategoryResponse>>();
 app.MapGet("/v2/categories", () => "Hello World!");
-app.MapPost("/v1/categories", () => "Hello World!");
+app.MapGet("/v1/categories", () => "Hello World!");
 app.MapPut("/v1/categories", () => "Hello World!");
 app.MapDelete("/v1/categories", () => "Hello World!");
 
