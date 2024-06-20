@@ -45,15 +45,20 @@ public class CategoryHandler : ICategoryHandler
 
     public async Task<PagedResponse<List<CategoryResponse>>> GetAllAsync(GetAllCategoriesRequest request)
     {
-        var categories = await _context.Categories
+        var query = _context.Categories
             .AsNoTracking()
-            .Where(x => x.UserId == request.UserId)
+            .Where(x => x.UserId == request.UserId);
+
+        var categories = await query
+            .OrderBy(x => x.Title)
             .Select(x => x.ToResponse())
             .Skip((request.PageNumber - 1) * request.PageSize)
             .Take(request.PageSize)
             .ToListAsync();
 
-        return new PagedResponse<List<CategoryResponse>>(categories);
+        var count = await query.CountAsync();
+
+        return new PagedResponse<List<CategoryResponse>>(categories, count, request.PageNumber, request.PageSize);
     }
 
     public async Task<Response<CategoryResponse?>> GetByIdAsync(GetCategoryByIdRequest request)

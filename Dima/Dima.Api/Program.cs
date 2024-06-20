@@ -52,9 +52,19 @@ app.MapGet("/v1/categories/{id}", async ([FromRoute] long id, [FromBody] GetCate
 })
     .WithName("Categories: GetById")
     .WithSummary("Obtém uma categoria por Id")
-    .Produces<Response<CategoryResponse?>>();;
+    .Produces<Response<CategoryResponse?>>();
 
-app.Run();
+app.MapGet("/v1/categories", async (ICategoryHandler handler) => 
+{
+    GetAllCategoriesRequest request = new()
+    {
+        UserId = "thomao@gmail.com"
+    };
+    return await handler.GetAllAsync(request);
+})
+    .WithName("Categories: Get All")
+    .WithSummary("Obtém todas as categorias de um usuário")
+    .Produces<Response<CategoryResponse?>>();
 
 app.MapDelete("/v1/categories/{id}", async ([FromRoute] long id, [FromBody] DeleteCategoryRequest request, ICategoryHandler handler) => 
 {
