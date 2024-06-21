@@ -5,6 +5,7 @@ using Dima.Core.Models;
 using Dima.Core.Requests.Categories;
 using Dima.Core.Responses;
 using Dima.Core.Responses.Categories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dima.Api.Handlers;
 
@@ -24,27 +25,66 @@ public class CategoryHandler : ICategoryHandler
 
         return new Response<CategoryResponse>(
             category.ToResponse(),
-            StatusCodes.Status200OK,
+            StatusCodes.Status201Created,
             "Categoria criada com sucesso!");
     }
 
-    public Task<Response<CategoryResponse>> DeleteAsync(DeleteCategoryRequest request)
+    public async Task<Response<CategoryResponse?>> DeleteAsync(DeleteCategoryRequest request)
     {
-        throw new NotImplementedException();
+        var category = await _context.Categories
+            .FirstOrDefaultAsync(x => x.Id == request.Id && request.UserId == x.UserId);
+
+        if (category is null)
+            return new Response<CategoryResponse?>(null, StatusCodes.Status404NotFound, "Categoria não encontrada");
+
+        _context.Categories.Remove(category);
+        await _context.SaveChangesAsync();
+
+        return new Response<CategoryResponse?>(category.ToResponse(), message: "Categoria removida com sucesso!");
     }
 
-    public Task<PagedResponse<List<CategoryResponse>>> GetAllAsync(GetAllCategoriesRequest request)
+    public async Task<PagedResponse<List<CategoryResponse>>> GetAllAsync(GetAllCategoriesRequest request)
     {
-        throw new NotImplementedException();
+        var query = _context.Categories
+            .AsNoTracking()
+            .Where(x => x.UserId == request.UserId);
+
+        var categories = await query
+            .OrderBy(x => x.Title)
+            .Select(x => x.ToResponse())
+            .Skip((request.PageNumber - 1) * request.PageSize)
+            .Take(request.PageSize)
+            .ToListAsync();
+
+        var count = await query.CountAsync();
+
+        return new PagedResponse<List<CategoryResponse>>(categories, count, request.PageNumber, request.PageSize);
     }
 
-    public Task<Response<CategoryResponse>> GetByIdAsync(GetCategoryByIdRequest request)
+    public async Task<Response<CategoryResponse?>> GetByIdAsync(GetCategoryByIdRequest request)
     {
-        throw new NotImplementedException();
+        var category = await _context.Categories
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == request.Id && request.UserId == x.UserId);
+
+        return category is null
+            ? new Response<CategoryResponse?>(null, StatusCodes.Status404NotFound, "Categoria não encontrada")
+            : new Response<CategoryResponse?>(category.ToResponse());
     }
 
-    public Task<Response<CategoryResponse>> UpdateAsync(UpdateCategoryRequest request)
+    public async Task<Response<CategoryResponse?>> UpdateAsync(UpdateCategoryRequest request)
     {
-        throw new NotImplementedException();
+        var category = await _context.Categories
+            .FirstOrDefaultAsync(x => x.Id == request.Id && request.UserId == x.UserId);
+
+        if (category is null)
+            return new Response<CategoryResponse?>(null, StatusCodes.Status404NotFound, "Categoria não encontrada");
+
+        category.FillModel(request);
+
+        _context.Categories.Update(category);
+        await _context.SaveChangesAsync();
+
+        return new Response<CategoryResponse?>(category.ToResponse(), message: "Categoria editada com sucesso");
     }
 }

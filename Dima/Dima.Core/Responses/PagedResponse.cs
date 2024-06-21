@@ -20,6 +20,12 @@ public class PagedResponse<TData> : Response<TData>
         
     }
 
+    public PagedResponse(TData? data, int code, IList<string> messages)
+        :base(data, code, messages)
+    {
+        
+    }
+
     public int CurrentPage { get; set; }
     public int TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
     public int PageSize { get; set; } = Configuration.DefaultPageSize;
