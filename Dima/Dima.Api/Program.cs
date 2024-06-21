@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using Asp.Versioning.Builder;
 using Azure;
+using Dima.Api;
 using Dima.Api.Data;
 using Dima.Api.Filters;
 using Dima.Api.Handlers;
@@ -9,10 +10,8 @@ using Dima.Core.Requests.Categories;
 using Dima.Core.Responses.Categories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
-// todo: api versioning https://www.milanjovanovic.tech/blog/api-versioning-in-aspnetcore
-// https://github.com/dotnet/aspnet-api-versioning/blob/3857a332057d970ad11bac0edfdbff8a559a215d/examples/AspNetCore/WebApi/MinimalOpenApiExample/Program.cs
-// todo: grouproutes https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/route-handlers?view=aspnetcore-8.0#route-groups
+using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +25,7 @@ builder.Services.AddDbContext<AppDbContext>(x =>
         x.UseSqlServer(connectionString);
     });
 
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddApiVersioning(options =>
 {
     options.DefaultApiVersion = new ApiVersion(1);
@@ -39,6 +39,9 @@ builder.Services.AddApiVersioning(options =>
     options.GroupNameFormat = "'v'V";
     options.SubstituteApiVersionInUrl = true;
 });
+
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+builder.Services.AddSwaggerGen( options => options.OperationFilter<SwaggerDefaultValues>());
 
 builder.Services.AddSwaggerGen(x =>
 {
@@ -64,7 +67,7 @@ ApiVersionSet apiVersionSet = app.NewApiVersionSet()
 
 app.UseExceptionHandler();
 
-app.MapPost("api/v{v:apiVersion}/categories", async ([FromBody] CreateCategoryRequest request, ICategoryHandler handler) => await handler.CreateAsync(request))
+app.MapPost("api/v{version:apiVersion}/categories", async ([FromBody] CreateCategoryRequest request, ICategoryHandler handler) => await handler.CreateAsync(request))
     .AddEndpointFilter<ValidateModelFilter>()
     .WithApiVersionSet(apiVersionSet)
     .MapToApiVersion(1)
