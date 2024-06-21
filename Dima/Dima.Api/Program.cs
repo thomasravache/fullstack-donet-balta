@@ -1,8 +1,9 @@
+using Asp.Versioning;
+using Asp.Versioning.Builder;
 using Azure;
 using Dima.Api.Data;
 using Dima.Api.Filters;
 using Dima.Api.Handlers;
-using Dima.Core.Extensions;
 using Dima.Core.Handlers;
 using Dima.Core.Requests.Categories;
 using Dima.Core.Responses.Categories;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 // todo: api versioning https://www.milanjovanovic.tech/blog/api-versioning-in-aspnetcore
+// https://github.com/dotnet/aspnet-api-versioning/blob/3857a332057d970ad11bac0edfdbff8a559a215d/examples/AspNetCore/WebApi/MinimalOpenApiExample/Program.cs
 // todo: grouproutes https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/route-handlers?view=aspnetcore-8.0#route-groups
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,7 +26,20 @@ builder.Services.AddDbContext<AppDbContext>(x =>
         x.UseSqlServer(connectionString);
     });
 
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1);
+    options.ReportApiVersions = true;
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ApiVersionReader = ApiVersionReader.Combine(
+        new UrlSegmentApiVersionReader(),
+        new HeaderApiVersionReader("X-Api-Version"));
+}).AddApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'V";
+    options.SubstituteApiVersionInUrl = true;
+});
+
 builder.Services.AddSwaggerGen(x =>
 {
     x.CustomSchemaIds(n => n.FullName); // Pega o nome das classes para documentação, evitando conflitos entre nomes iguais de classes
@@ -38,13 +53,21 @@ builder.Services.AddTransient<ICategoryHandler, CategoryHandler>();
 
 var app = builder.Build();
 
+
 app.UseSwagger(); // informa que iremos utilizar o swagger
 app.UseSwaggerUI(); // informa que iremos utilizar a UI do swagger
 
+ApiVersionSet apiVersionSet = app.NewApiVersionSet()
+    .HasApiVersion(new ApiVersion(1))
+    .ReportApiVersions()
+    .Build();
+
 app.UseExceptionHandler();
 
-app.MapPost("/v1/categories", async ([FromBody] CreateCategoryRequest request, ICategoryHandler handler) => await handler.CreateAsync(request))
+app.MapPost("api/v{v:apiVersion}/categories", async ([FromBody] CreateCategoryRequest request, ICategoryHandler handler) => await handler.CreateAsync(request))
     .AddEndpointFilter<ValidateModelFilter>()
+    .WithApiVersionSet(apiVersionSet)
+    .MapToApiVersion(1)
     .WithName("Categories: Create")
     .WithSummary("Cria uma categoria")
     .Produces<Response<CategoryResponse>>();
@@ -88,7 +111,7 @@ app.MapDelete("/v1/categories/{id}", async ([FromRoute] long id, [FromBody] Dele
 })
     .WithName("Categories: Delete")
     .WithSummary("Deleta uma categoria")
-    .Produces<Response<CategoryResponse?>>();;
+    .Produces<Response<CategoryResponse?>>();
 
 // app.MapGroup("/v1/categories
 
