@@ -67,14 +67,6 @@ ApiVersionSet apiVersionSet = app.NewApiVersionSet()
 
 app.UseExceptionHandler();
 
-app.MapPost("api/v{version:apiVersion}/categories", async ([FromBody] CreateCategoryRequest request, ICategoryHandler handler) => await handler.CreateAsync(request))
-    .AddEndpointFilter<ValidateModelFilter>()
-    .WithApiVersionSet(apiVersionSet)
-    .MapToApiVersion(1)
-    .WithName("Categories: Create")
-    .WithSummary("Cria uma categoria")
-    .Produces<Response<CategoryResponse>>();
-
 
 app.MapPut("/v1/categories/{id}", async (long id, UpdateCategoryRequest request, ICategoryHandler handler) => 
 {

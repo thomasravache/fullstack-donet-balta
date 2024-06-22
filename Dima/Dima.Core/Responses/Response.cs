@@ -1,27 +1,20 @@
-using System.Text.Json.Serialization;
-
 namespace Dima.Core.Responses;
 
 public class Response<TData>
 {
-    private readonly int _code = Configuration.DefaultStatusCode;
-
-    [JsonConstructor]
-    public Response() {  }
-
-    public Response(TData? data, int code = Configuration.DefaultStatusCode, string? message = null)
+    public Response(bool isSuccess, TData? data, string? message = null)
     {
         Data = data;
-        _code = code;
+        IsSuccess = isSuccess;
 
         if (message is not null)
             Messages.Add(message);
     }
 
-    public Response(TData? data, int code, IList<string>? messages = null)
+    public Response(bool isSuccess, TData? data, IList<string>? messages = null)
     {
         Data = data;
-        _code = code;
+        IsSuccess = isSuccess;
 
         if (messages is not null)
             Messages.AddRange(messages);
@@ -30,6 +23,16 @@ public class Response<TData>
     public TData? Data { get; set; }
     public List<string> Messages { get; set; } = [];
     public string? PrincipalMessage => Messages.FirstOrDefault();
+    public bool IsSuccess { get; }
+    public bool IsFailure => !IsSuccess;
 
-    public bool IsSuccess => _code is >= 200 and <= 299;
+    public static Response<TData> Failure(string message)
+        => new(false, default, message);
+    public static Response<TData> Failure(IList<string> messages)
+        => new(false, default, messages);
+
+    public static Response<TData> Success(TData? data, string? message = null)
+        => new(true, data, message);
+    public static Response<TData> Success(TData? data, IList<string>? messages)
+        => new(true, data, messages);
 }

@@ -23,10 +23,7 @@ public class CategoryHandler : ICategoryHandler
         await _context.Categories.AddAsync(category);
         await _context.SaveChangesAsync();
 
-        return new Response<CategoryResponse>(
-            category.ToResponse(),
-            StatusCodes.Status201Created,
-            "Categoria criada com sucesso!");
+        return Response<CategoryResponse>.Success(category.ToResponse(), "Categoria criada com sucesso!");
     }
 
     public async Task<Response<CategoryResponse?>> DeleteAsync(DeleteCategoryRequest request)
@@ -35,15 +32,15 @@ public class CategoryHandler : ICategoryHandler
             .FirstOrDefaultAsync(x => x.Id == request.Id && request.UserId == x.UserId);
 
         if (category is null)
-            return new Response<CategoryResponse?>(null, StatusCodes.Status404NotFound, "Categoria não encontrada");
+            return Response<CategoryResponse?>.Failure("Categoria não encontrada");
 
         _context.Categories.Remove(category);
         await _context.SaveChangesAsync();
 
-        return new Response<CategoryResponse?>(category.ToResponse(), message: "Categoria removida com sucesso!");
+        return Response<CategoryResponse?>.Success(category.ToResponse(), message: "Categoria removida com sucesso!");
     }
 
-    public async Task<PagedResponse<List<CategoryResponse>>> GetAllAsync(GetAllCategoriesRequest request)
+    public async Task<Response<PagedResult<CategoryResponse>>> GetAllAsync(GetAllCategoriesRequest request)
     {
         var query = _context.Categories
             .AsNoTracking()
@@ -58,7 +55,15 @@ public class CategoryHandler : ICategoryHandler
 
         var count = await query.CountAsync();
 
-        return new PagedResponse<List<CategoryResponse>>(categories, count, request.PageNumber, request.PageSize);
+        var result = new PagedResult<CategoryResponse>()
+        {
+            CurrentPage = request.PageNumber,
+            Items = categories,
+            PageSize = request.PageSize,
+            TotalCount = count
+        };
+
+        return Response<PagedResult<CategoryResponse>>.Success(result, "Categoria criada com sucesso!");
     }
 
     public async Task<Response<CategoryResponse?>> GetByIdAsync(GetCategoryByIdRequest request)
@@ -68,8 +73,8 @@ public class CategoryHandler : ICategoryHandler
             .FirstOrDefaultAsync(x => x.Id == request.Id && request.UserId == x.UserId);
 
         return category is null
-            ? new Response<CategoryResponse?>(null, StatusCodes.Status404NotFound, "Categoria não encontrada")
-            : new Response<CategoryResponse?>(category.ToResponse());
+            ? Response<CategoryResponse?>.Failure("Categoria não encontrada")
+            : Response<CategoryResponse?>.Success(category.ToResponse());
     }
 
     public async Task<Response<CategoryResponse?>> UpdateAsync(UpdateCategoryRequest request)
@@ -78,13 +83,13 @@ public class CategoryHandler : ICategoryHandler
             .FirstOrDefaultAsync(x => x.Id == request.Id && request.UserId == x.UserId);
 
         if (category is null)
-            return new Response<CategoryResponse?>(null, StatusCodes.Status404NotFound, "Categoria não encontrada");
+            return Response<CategoryResponse?>.Failure("Categoria não encontrada");
 
         category.FillModel(request);
 
         _context.Categories.Update(category);
         await _context.SaveChangesAsync();
 
-        return new Response<CategoryResponse?>(category.ToResponse(), message: "Categoria editada com sucesso");
+        return Response<CategoryResponse?>.Success(category.ToResponse(), message: "Categoria editada com sucesso");
     }
 }
