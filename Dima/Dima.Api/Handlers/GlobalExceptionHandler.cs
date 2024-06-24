@@ -14,7 +14,7 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
             exception.Message
         );
 
-        var response = new Response<object>(null, StatusCodes.Status500InternalServerError, "Erro interno do servidor");
+        var response = Response<object>.Failure("Erro interno do servidor");
 
         httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
 

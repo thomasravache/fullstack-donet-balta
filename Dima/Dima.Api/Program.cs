@@ -67,7 +67,6 @@ ApiVersionSet apiVersionSet = app.NewApiVersionSet()
 
 app.UseExceptionHandler();
 
-
 app.MapPut("/v1/categories/{id}", async (long id, UpdateCategoryRequest request, ICategoryHandler handler) => 
 {
     request.Id = id;
