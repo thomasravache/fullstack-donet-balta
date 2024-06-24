@@ -7,7 +7,7 @@ namespace Dima.Core.Extensions;
 public static class CategoryExtensions
 {
     public static CategoryResponse ToResponse(this Category entity)
-        => new CategoryResponse
+        => new()
         {
             Description = entity.Description,
             Id = entity.Id,
@@ -16,7 +16,7 @@ public static class CategoryExtensions
         };
 
     public static Category ToModel(this CreateCategoryRequest request)
-        => new Category
+        => new()
         {
             Description = request.Description,
             Title = request.Title,

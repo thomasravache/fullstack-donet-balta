@@ -15,7 +15,7 @@ public class ValidateModelFilter : IEndpointFilter
 
         if (validationMessages.Count == 0) return await next(context);
 
-        var response = new Response<object>(null, StatusCodes.Status400BadRequest, validationMessages);
+        var response = Response<object>.Failure(validationMessages);
 
         context.HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
         await context.HttpContext.Response.WriteAsJsonAsync(response);
