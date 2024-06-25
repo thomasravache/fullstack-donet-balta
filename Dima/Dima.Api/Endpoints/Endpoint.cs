@@ -24,7 +24,11 @@ public static class Endpoint
         endpoints.MapGroup("v{version:apiVersion}/categories")
             .WithTags("Categories")
             .MapToApiVersion(1)
-            .MapEndpoint<CreateCategoryEndpoint>();
+            .MapEndpoint<CreateCategoryEndpoint>()
+            .MapEndpoint<UpdateCategoryEndpoint>()
+            .MapEndpoint<DeleteCategoryEndpoint>()
+            .MapEndpoint<GetCategoryByIdEndpoint>()
+            .MapEndpoint<GetAllCategoriesEndpoint>();
     }
 
     private static IEndpointRouteBuilder MapEndpoint<TEndpoint>(this IEndpointRouteBuilder app)

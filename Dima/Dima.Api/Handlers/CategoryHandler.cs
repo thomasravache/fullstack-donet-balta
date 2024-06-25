@@ -63,11 +63,13 @@ public class CategoryHandler : ICategoryHandler
             TotalCount = count
         };
 
-        return Response<PagedResult<CategoryResponse>>.Success(result, "Categoria criada com sucesso!");
+        return Response<PagedResult<CategoryResponse>>.Success(result);
     }
 
     public async Task<Response<CategoryResponse?>> GetByIdAsync(GetCategoryByIdRequest request)
     {
+        
+
         var category = await _context.Categories
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == request.Id && request.UserId == x.UserId);
