@@ -9,11 +9,13 @@ namespace Dima.Api.Endpoints.Categories;
 
 public class CreateCategoryEndpoint : IEndpoint
 {
-    public void Map(IEndpointRouteBuilder app)
+    public static void Map(IEndpointRouteBuilder app)
     {
         app.MapPost("/", HandleAsync)
-            .AddEndpointFilter<ValidateModelFilter>()
-            .MapToApiVersion(1)
+            .WithName("Categoies: Create")
+            .WithSummary("Cria uma categoria")
+            .WithDescription("Cria uma categoria")
+            .WithOrder(1)
             .Produces<Response<CategoryResponse>>();
     }
 
