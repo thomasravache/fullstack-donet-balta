@@ -47,8 +47,8 @@ public class CategoryHandler : ICategoryHandler
             .Where(x => x.UserId == request.UserId);
 
         var categories = await query
-            .OrderBy(x => x.Title)
-            .Select(x => x.ToResponse())
+            .OrderBy(category => category.Title)
+            .Select(category => category.ToResponse())
             .Skip((request.PageNumber - 1) * request.PageSize)
             .Take(request.PageSize)
             .ToListAsync();
