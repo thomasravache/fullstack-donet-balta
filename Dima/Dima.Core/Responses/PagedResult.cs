@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace Dima.Core.Responses;
 
 public class PagedResult<TData>
