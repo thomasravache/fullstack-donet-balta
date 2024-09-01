@@ -53,6 +53,40 @@ public class TransactionHandler : ITransactionHandler
         throw new NotImplementedException();
     }
 
+    public async Task<Response<PagedResult<TransactionResponse>>> GetByPeriodAsync(GetTransactionByIdRequest request)
+    {
+        request.StartDate ??= DateTime.Now.GetFirstDay();
+        request.EndDate ??= DateTime.Now.GetLastDay();
+
+        var query = _context.Transactions
+            .AsNoTracking()
+            .Where(transaction =>
+                transaction.UserId == request.UserId &&
+                transaction.CreatedAt >= request.StartDate &&
+                transaction.CreatedAt <= request.EndDate
+            );
+
+        var transactions = await _context.Transactions
+            .AsNoTracking()
+            .OrderBy(transaction => transaction.Title)
+            .Select(transaction => transaction.ToResponse())
+            .Skip((request.PageNumber - 1) * request.PageSize)
+            .Take(request.PageSize)
+            .ToListAsync();
+
+        var count = await query.CountAsync();
+
+        var result = new PagedResult<TransactionResponse>
+        {
+            CurrentPage = request.PageNumber,
+            Items = transactions,
+            PageSize = request.PageSize,
+            TotalCount = count
+        };
+
+        return Response<PagedResult<TransactionResponse>>.Success(result);
+    }
+
     public async Task<Response<TransactionResponse?>> UpdateAsync(UpdateTransactionRequest request)
     {
         var transaction = await _context.Transactions
