@@ -68,8 +68,6 @@ public class CategoryHandler : ICategoryHandler
 
     public async Task<Response<CategoryResponse?>> GetByIdAsync(GetCategoryByIdRequest request)
     {
-        
-
         var category = await _context.Categories
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == request.Id && request.UserId == x.UserId);

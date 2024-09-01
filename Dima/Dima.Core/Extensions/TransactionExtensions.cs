@@ -34,11 +34,9 @@ public static class TransactionExtensions
     public static void FillModel(this Transaction model, UpdateTransactionRequest request)
     {
         model.Amount = request.Amount;
-        model.Id = request.Id;
         model.Title = request.Title;
         model.Type = request.Type;
         model.CategoryId = request.CategoryId;
         model.PaidOrReceivedAt = request.PaidOrReceivedAt;
-        model.UserId = request.UserId;
     }
 }
