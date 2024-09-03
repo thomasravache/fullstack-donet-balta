@@ -15,6 +15,14 @@ public static class CategoryExtensions
             UserId = entity.UserId
         };
 
+    public static CategoryResponse IncludeTransactions(this CategoryResponse categoryResponse, ICollection<Transaction> transactions)
+    {
+        foreach (var item in transactions)
+            categoryResponse.Transactions.Add(item.ToResponse());
+
+        return categoryResponse;
+    }
+
     public static Category ToModel(this CreateCategoryRequest request)
         => new()
         {

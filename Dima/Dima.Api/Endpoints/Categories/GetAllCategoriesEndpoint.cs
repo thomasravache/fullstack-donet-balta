@@ -28,7 +28,7 @@ public class GetAllCategoriesEndpoint : IEndpoint
         {
             PageNumber = request.PageNumber,
             PageSize = request.PageSize,
-            UserId = "maneiro@gmail.com"
+            UserId = request.UserId
         });
 
         return result.IsSuccess

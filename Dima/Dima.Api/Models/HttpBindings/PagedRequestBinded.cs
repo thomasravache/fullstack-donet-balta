@@ -1,5 +1,4 @@
 using Dima.Core.Requests;
-using Dima.Core.Requests.Categories;
 
 namespace Dima.Api.Models.HttpBindings;
 
@@ -11,6 +10,7 @@ public class PagedRequestBinded : PagedRequest
         {
             PageNumber = int.TryParse(context.Request.Query["pageNumber"], out var pageNumber) ? pageNumber : default,
             PageSize = int.TryParse(context.Request.Query["pageSize"], out var pageSize) ? pageSize : default,
+            UserId = context.Request.Query["userId"].ToString() ?? string.Empty
         });
     }
 }

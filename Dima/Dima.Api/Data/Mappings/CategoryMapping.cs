@@ -24,5 +24,11 @@ public class CategoryMapping : IEntityTypeConfiguration<Category>
             .IsRequired(true)
             .HasColumnType("VARCHAR")
             .HasMaxLength(160);
+
+        builder
+            .HasMany(e => e.Transactions)
+            .WithOne(e => e.Category)
+            .HasForeignKey(e => e.CategoryId)
+            .IsRequired();
     }
 }

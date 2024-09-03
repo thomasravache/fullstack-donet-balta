@@ -1,5 +1,6 @@
 using Dima.Core.Enums;
 using Dima.Core.Models;
+using Dima.Core.Responses.Categories;
 
 namespace Dima.Core.Responses.Transactions;
 
@@ -12,6 +13,6 @@ public class TransactionResponse
     public ETransactionType Type { get; set; } = ETransactionType.Withdraw; // Geralmente se tem mais despesas do que receitas
     public decimal Amount { get; set; }
     public long CategoryId { get; set; }
-    public Category Category { get; set; } = null!;
+    public CategoryResponse? Category { get; set; } = null!;
     public string UserId { get; set; } = string.Empty;
 }

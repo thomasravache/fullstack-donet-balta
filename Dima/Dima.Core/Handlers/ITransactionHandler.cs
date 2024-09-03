@@ -8,8 +8,8 @@ public interface ITransactionHandler
 {
     Task<Response<TransactionResponse>> CreateAsync(CreateTransactionRequest request);
     Task<Response<TransactionResponse?>> DeleteAsync(DeleteTransactionRequest request);
-    Task<Response<PagedResult<TransactionResponse>>> GetAllAsync(GetTransactionByPeriodRequest request);
+    Task<Response<PagedResult<TransactionResponse>>> GetAllAsync(GetAllTransactionsRequest request);
     Task<Response<TransactionResponse?>> GetByIdAsync(GetTransactionByIdRequest request);
-    Task<Response<PagedResult<TransactionResponse>>> GetByPeriodAsync(GetTransactionByIdRequest request);
+    Task<Response<PagedResult<TransactionResponse>>> GetByPeriodAsync(GetTransactionByPeriodRequest request);
     Task<Response<TransactionResponse?>> UpdateAsync(UpdateTransactionRequest request);
 }
