@@ -2,6 +2,7 @@ using Asp.Versioning;
 using Asp.Versioning.Builder;
 using Dima.Api.Common.Api;
 using Dima.Api.Endpoints.Categories;
+using Dima.Api.Endpoints.Transactions;
 using Dima.Api.Filters;
 
 namespace Dima.Api.Endpoints;
@@ -29,6 +30,14 @@ public static class Endpoint
             .MapEndpoint<DeleteCategoryEndpoint>()
             .MapEndpoint<GetCategoryByIdEndpoint>()
             .MapEndpoint<GetAllCategoriesEndpoint>();
+
+        endpoints.MapGroup("v{version:apiVersion}/transactions")
+            .WithTags("Transactions")
+            .MapToApiVersion(1)
+            .MapEndpoint<CreateTransactionEndpoint>()
+            .MapEndpoint<DeleteTransactionEndpoint>()
+            .MapEndpoint<GetTransactionsByPeriodEndpoint>()
+            .MapEndpoint<UpdateTransactionEndpoint>();
     }
 
     private static IEndpointRouteBuilder MapEndpoint<TEndpoint>(this IEndpointRouteBuilder app)

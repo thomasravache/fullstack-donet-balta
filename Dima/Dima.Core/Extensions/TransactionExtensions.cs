@@ -10,7 +10,7 @@ public static class TransactionExtensions
         => new()
         {
             Amount = entity.Amount,
-            Category = entity.Category,
+            Category = entity.Category?.ToResponse(),
             CategoryId = entity.CategoryId,
             CreatedAt = entity.CreatedAt,
             Id = entity.Id,
@@ -19,6 +19,15 @@ public static class TransactionExtensions
             Type = entity.Type,
             UserId = entity.UserId
         };
+
+    public static List<TransactionResponse> ToResponse(this IList<Transaction> entities)
+    {
+        List<TransactionResponse> list = [];
+
+        foreach(var item in entities) list.Add(item.ToResponse());
+
+        return list;
+    }
 
     public static Transaction ToModel(this CreateTransactionRequest request)
         => new()

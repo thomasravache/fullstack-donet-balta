@@ -6,5 +6,5 @@ public abstract class Request
 {
     [Required(ErrorMessage = "O Id do usuário é obrigatório")]
     [EmailAddress(ErrorMessage = "O Id do usuário precisa ser um e-mail válido")]
-    public string UserId { get; set; } = string.Empty;
+    public required string UserId { get; set; } = string.Empty;
 }

@@ -43,7 +43,7 @@ public class TransactionHandler : ITransactionHandler
         return Response<TransactionResponse?>.Success(transaction.ToResponse(), message: "Transação removida com sucesso!");
     }
 
-    public Task<Response<PagedResult<TransactionResponse>>> GetAllAsync(GetTransactionByPeriodRequest request)
+    public Task<Response<PagedResult<TransactionResponse>>> GetAllAsync(GetAllTransactionsRequest request)
     {
         throw new NotImplementedException();
     }
@@ -53,22 +53,23 @@ public class TransactionHandler : ITransactionHandler
         throw new NotImplementedException();
     }
 
-    public async Task<Response<PagedResult<TransactionResponse>>> GetByPeriodAsync(GetTransactionByIdRequest request)
+    public async Task<Response<PagedResult<TransactionResponse>>> GetByPeriodAsync(GetTransactionByPeriodRequest request)
     {
         request.StartDate ??= DateTime.Now.GetFirstDay();
         request.EndDate ??= DateTime.Now.GetLastDay();
 
         var query = _context.Transactions
             .AsNoTracking()
+            // .Include(x => x.Category)
             .Where(transaction =>
                 transaction.UserId == request.UserId &&
                 transaction.CreatedAt >= request.StartDate &&
                 transaction.CreatedAt <= request.EndDate
             );
 
-        var transactions = await _context.Transactions
-            .AsNoTracking()
-            .OrderBy(transaction => transaction.Title)
+        var transactions = await query
+            .OrderByDescending(transaction => transaction.CreatedAt)
+                .ThenBy(transaction => transaction.Title)
             .Select(transaction => transaction.ToResponse())
             .Skip((request.PageNumber - 1) * request.PageSize)
             .Take(request.PageSize)
@@ -97,7 +98,7 @@ public class TransactionHandler : ITransactionHandler
             );
 
         if (transaction is null)
-            return Response<TransactionResponse?>.Failure("Categoria não encontrada");
+            return Response<TransactionResponse?>.Failure("Transação não encontrada");
 
         transaction.FillModel(request);
 
