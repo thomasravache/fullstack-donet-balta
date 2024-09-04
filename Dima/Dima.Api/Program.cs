@@ -6,6 +6,7 @@ using Dima.Api.Endpoints;
 using Dima.Api.Handlers;
 using Dima.Core.Handlers;
 using Microsoft.AspNetCore.Http.Json;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -44,6 +45,11 @@ builder.Services.AddSwaggerGen(x =>
 {
     x.CustomSchemaIds(n => n.FullName); // Pega o nome das classes para documentação, evitando conflitos entre nomes iguais de classes
 });
+
+// tem que ser nessa ordem o authentication e authorization
+builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
+    .AddIdentityCookies(); // informar qual o tipo de autenticação (jwt, identity, etc)
+builder.Services.AddAuthorization();
 
 builder.Services.Configure<JsonOptions>(options =>
 {
