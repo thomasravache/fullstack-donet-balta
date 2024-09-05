@@ -6,21 +6,12 @@ using Dima.Api.Endpoints;
 using Dima.Api.Handlers;
 using Dima.Core.Handlers;
 using Microsoft.AspNetCore.Http.Json;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
-
-var connectionString = builder
-    .Configuration
-    .GetConnectionString("DefaultConnection")
-    ?? string.Empty;
-
-builder.Services.AddDbContext<AppDbContext>(x => 
-    {
-        x.UseSqlServer(connectionString);
-    });
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddApiVersioning(options =>
@@ -44,6 +35,22 @@ builder.Services.AddSwaggerGen(x =>
 {
     x.CustomSchemaIds(n => n.FullName); // Pega o nome das classes para documentação, evitando conflitos entre nomes iguais de classes
 });
+
+// tem que ser nessa ordem o authentication e authorization
+builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
+    .AddIdentityCookies(); // informar qual o tipo de autenticação (jwt, identity, etc)
+
+builder.Services.AddAuthorization();
+
+var connectionString = builder
+    .Configuration
+    .GetConnectionString("DefaultConnection")
+    ?? string.Empty;
+
+builder.Services.AddDbContext<AppDbContext>(x => 
+    {
+        x.UseSqlServer(connectionString);
+    });
 
 builder.Services.Configure<JsonOptions>(options =>
 {

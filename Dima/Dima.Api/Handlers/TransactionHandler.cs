@@ -60,7 +60,6 @@ public class TransactionHandler : ITransactionHandler
 
         var query = _context.Transactions
             .AsNoTracking()
-            // .Include(x => x.Category)
             .Where(transaction =>
                 transaction.UserId == request.UserId &&
                 transaction.CreatedAt >= request.StartDate &&
