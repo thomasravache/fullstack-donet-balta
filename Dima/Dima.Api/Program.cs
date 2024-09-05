@@ -4,6 +4,7 @@ using Dima.Api;
 using Dima.Api.Data;
 using Dima.Api.Endpoints;
 using Dima.Api.Handlers;
+using Dima.Api.Models;
 using Dima.Core.Handlers;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Identity;
@@ -51,6 +52,12 @@ builder.Services.AddDbContext<AppDbContext>(x =>
     {
         x.UseSqlServer(connectionString);
     });
+
+builder.Services
+    .AddIdentityCore<User>()
+    .AddRoles<IdentityRole<long>>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddApiEndpoints();
 
 builder.Services.Configure<JsonOptions>(options =>
 {
