@@ -84,4 +84,8 @@ app.UseExceptionHandler();
 app.MapGet("/", () => new { message = "OK" });
 app.MapEndpoints();
 
+app.MapGroup("v1/identity")
+    .WithTags("Identity")
+    .MapIdentityApi<User>();
+
 app.Run();
