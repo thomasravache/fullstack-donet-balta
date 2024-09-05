@@ -38,7 +38,8 @@ builder.Services.AddSwaggerGen(x =>
 });
 
 // tem que ser nessa ordem o authentication e authorization
-builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
+builder.Services
+    .AddAuthentication(IdentityConstants.ApplicationScheme)
     .AddIdentityCookies(); // informar qual o tipo de autenticação (jwt, identity, etc)
 
 builder.Services.AddAuthorization();
@@ -72,6 +73,8 @@ builder.Services.AddTransient<ITransactionHandler, TransactionHandler>();
 
 var app = builder.Build();
 
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseSwagger(); // informa que iremos utilizar o swagger
 app.UseSwaggerUI(); // informa que iremos utilizar a UI do swagger
