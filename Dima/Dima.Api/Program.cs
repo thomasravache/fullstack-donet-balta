@@ -4,6 +4,7 @@ using Dima.Api;
 using Dima.Api.Data;
 using Dima.Api.Endpoints;
 using Dima.Api.Handlers;
+using Dima.Api.Models;
 using Dima.Core.Handlers;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Identity;
@@ -37,7 +38,8 @@ builder.Services.AddSwaggerGen(x =>
 });
 
 // tem que ser nessa ordem o authentication e authorization
-builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
+builder.Services
+    .AddAuthentication(IdentityConstants.ApplicationScheme)
     .AddIdentityCookies(); // informar qual o tipo de autenticação (jwt, identity, etc)
 
 builder.Services.AddAuthorization();
@@ -52,6 +54,12 @@ builder.Services.AddDbContext<AppDbContext>(x =>
         x.UseSqlServer(connectionString);
     });
 
+builder.Services
+    .AddIdentityCore<User>()
+    .AddRoles<IdentityRole<long>>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddApiEndpoints();
+
 builder.Services.Configure<JsonOptions>(options =>
 {
     options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
@@ -65,6 +73,8 @@ builder.Services.AddTransient<ITransactionHandler, TransactionHandler>();
 
 var app = builder.Build();
 
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseSwagger(); // informa que iremos utilizar o swagger
 app.UseSwaggerUI(); // informa que iremos utilizar a UI do swagger
@@ -73,5 +83,9 @@ app.UseExceptionHandler();
 
 app.MapGet("/", () => new { message = "OK" });
 app.MapEndpoints();
+
+app.MapGroup("v1/identity")
+    .WithTags("Identity")
+    .MapIdentityApi<User>();
 
 app.Run();

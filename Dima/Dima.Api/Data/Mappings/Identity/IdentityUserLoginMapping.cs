@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Dima.Api.Data.Mappings;
+namespace Dima.Api.Data.Mappings.Identity;
 
 public class IdentityUserLoginMapping : IEntityTypeConfiguration<IdentityUserLogin<long>>
 {
