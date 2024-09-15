@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Dima.Api.Common.Api;
 using Dima.Core.Handlers;
 using Dima.Core.Requests.Categories;
@@ -19,6 +20,7 @@ public class DeleteCategoryEndpoint : IEndpoint
     }
 
     private static async Task<IResult> HandleAsync(
+        ClaimsPrincipal user,
         ICategoryHandler handler,
         long id
     )
@@ -26,7 +28,7 @@ public class DeleteCategoryEndpoint : IEndpoint
         var result = await handler.DeleteAsync(new()
         {
             Id = id,
-            UserId = "maneiro@gmail.com"
+            UserId = user.Identity?.Name ?? string.Empty
         });
 
         return result.IsSuccess

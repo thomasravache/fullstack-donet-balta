@@ -48,9 +48,15 @@ public class TransactionHandler : ITransactionHandler
         throw new NotImplementedException();
     }
 
-    public Task<Response<TransactionResponse?>> GetByIdAsync(GetTransactionByIdRequest request)
+    public async Task<Response<TransactionResponse?>> GetByIdAsync(GetTransactionByIdRequest request)
     {
-        throw new NotImplementedException();
+        var transaction = await _context.Transactions
+            .AsNoTracking()
+            .FirstOrDefaultAsync(transaction => transaction.Id == request.Id && transaction.UserId == request.UserId);
+
+        return transaction is null
+            ? Response<TransactionResponse?>.Failure("Transação não encontrada")
+            : Response<TransactionResponse?>.Success(transaction.ToResponse());
     }
 
     public async Task<Response<PagedResult<TransactionResponse>>> GetByPeriodAsync(GetTransactionByPeriodRequest request)

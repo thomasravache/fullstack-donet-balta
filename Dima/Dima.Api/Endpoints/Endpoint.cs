@@ -24,6 +24,7 @@ public static class Endpoint
 
         endpoints.MapGroup("v{version:apiVersion}/categories")
             .WithTags("Categories")
+            .RequireAuthorization()
             .MapToApiVersion(1)
             .MapEndpoint<CreateCategoryEndpoint>()
             .MapEndpoint<UpdateCategoryEndpoint>()
@@ -33,11 +34,13 @@ public static class Endpoint
 
         endpoints.MapGroup("v{version:apiVersion}/transactions")
             .WithTags("Transactions")
+            .RequireAuthorization()
             .MapToApiVersion(1)
             .MapEndpoint<CreateTransactionEndpoint>()
             .MapEndpoint<DeleteTransactionEndpoint>()
             .MapEndpoint<GetTransactionsByPeriodEndpoint>()
-            .MapEndpoint<UpdateTransactionEndpoint>();
+            .MapEndpoint<UpdateTransactionEndpoint>()
+            .MapEndpoint<GetTransactionByIdEndpoint>();
     }
 
     private static IEndpointRouteBuilder MapEndpoint<TEndpoint>(this IEndpointRouteBuilder app)
