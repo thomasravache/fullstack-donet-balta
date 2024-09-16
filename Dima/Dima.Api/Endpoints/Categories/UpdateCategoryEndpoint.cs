@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Dima.Api.Common.Api;
 using Dima.Core.Handlers;
 using Dima.Core.Requests.Categories;
@@ -20,12 +21,13 @@ public class UpdateCategoryEndpoint : IEndpoint
     }
 
     private static async Task<IResult> HandleAsync(
+        ClaimsPrincipal user,
         ICategoryHandler handler,
         [FromBody] UpdateCategoryRequest request,
         [FromRoute] long id
     )
     {
-        request.UserId = "maneiro@gmail.com";
+        request.UserId = user.Identity?.Name ?? string.Empty;
         request.Id = id;
 
         var result = await handler.UpdateAsync(request);

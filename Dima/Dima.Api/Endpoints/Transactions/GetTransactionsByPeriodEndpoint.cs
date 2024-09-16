@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Dima.Api.Common.Api;
 using Dima.Api.Models.HttpBindings;
 using Dima.Core.Handlers;
@@ -21,10 +22,12 @@ public class GetTransactionsByPeriodEndpoint : IEndpoint
     }
 
     private static async Task<IResult> HandleAsync(
+        ClaimsPrincipal user,
         ITransactionHandler handler,
         [AsParameters] GetTransactionByPeriodRequest request
     )
     {
+        request.UserId = user.Identity?.Name ?? string.Empty;
         var response = await handler.GetByPeriodAsync(request);
 
         return response.IsSuccess
