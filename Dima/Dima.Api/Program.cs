@@ -2,10 +2,12 @@ using System.Security.Claims;
 using System.Text.Json.Serialization;
 using Asp.Versioning;
 using Dima.Api;
+using Dima.Api.Common.Api;
 using Dima.Api.Data;
 using Dima.Api.Endpoints;
 using Dima.Api.Handlers;
 using Dima.Api.Models;
+using Dima.Core;
 using Dima.Core.Handlers;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Identity;
@@ -14,6 +16,7 @@ using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.AddConfiguration();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddApiVersioning(options =>
@@ -45,14 +48,9 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
-var connectionString = builder
-    .Configuration
-    .GetConnectionString("DefaultConnection")
-    ?? string.Empty;
-
 builder.Services.AddDbContext<AppDbContext>(x => 
     {
-        x.UseSqlServer(connectionString);
+        x.UseSqlServer(Configuration.ConnectionString);
     });
 
 builder.Services
