@@ -22,6 +22,10 @@ public static class Endpoint
             .WithApiVersionSet(apiVersionSet)
             .AddEndpointFilter<ValidateModelFilter>();
 
+        endpoints.MapGroup("/")
+            .WithTags("Health Check")
+            .MapGet("/", () => new { message = "OK" });
+
         endpoints.MapGroup("v{version:apiVersion}/categories")
             .WithTags("Categories")
             .RequireAuthorization()
