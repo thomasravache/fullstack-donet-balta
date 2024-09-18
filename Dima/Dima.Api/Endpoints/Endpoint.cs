@@ -2,8 +2,10 @@ using Asp.Versioning;
 using Asp.Versioning.Builder;
 using Dima.Api.Common.Api;
 using Dima.Api.Endpoints.Categories;
+using Dima.Api.Endpoints.Identity;
 using Dima.Api.Endpoints.Transactions;
 using Dima.Api.Filters;
+using Dima.Api.Models;
 
 namespace Dima.Api.Endpoints;
 
@@ -21,6 +23,16 @@ public static class Endpoint
             .MapGroup("api/")
             .WithApiVersionSet(apiVersionSet)
             .AddEndpointFilter<ValidateModelFilter>();
+
+        endpoints.MapGroup("/")
+            .WithTags("Health Check")
+            .MapGet("/", () => new { message = "OK" });
+
+        endpoints.MapGroup("v{version:apiVersion}/identity")
+            .WithTags("Identity")
+            .MapEndpoint<LogoutEndpoint>()
+            .MapEndpoint<GetRolesEndpoint>()
+            .MapIdentityApi<User>(); // endpoints padrão do Identity;
 
         endpoints.MapGroup("v{version:apiVersion}/categories")
             .WithTags("Categories")
