@@ -1,74 +1,20 @@
 using System.Security.Claims;
-using System.Text.Json.Serialization;
-using Asp.Versioning;
-using Dima.Api;
 using Dima.Api.Common.Api;
-using Dima.Api.Data;
 using Dima.Api.Endpoints;
-using Dima.Api.Handlers;
 using Dima.Api.Models;
-using Dima.Core;
-using Dima.Core.Handlers;
-using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
+
 builder.AddConfiguration();
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddApiVersioning(options =>
-{
-    options.DefaultApiVersion = new ApiVersion(1);
-    options.ReportApiVersions = true;
-    options.AssumeDefaultVersionWhenUnspecified = true;
-    options.ApiVersionReader = ApiVersionReader.Combine(
-        new UrlSegmentApiVersionReader(),
-        new HeaderApiVersionReader("X-Api-Version"));
-}).AddApiExplorer(options =>
-{
-    options.GroupNameFormat = "'v'V";
-    options.SubstituteApiVersionInUrl = true;
-});
-
-builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-builder.Services.AddSwaggerGen(options => options.OperationFilter<SwaggerDefaultValues>());
-
-builder.Services.AddSwaggerGen(x =>
-{
-    x.CustomSchemaIds(n => n.FullName); // Pega o nome das classes para documentação, evitando conflitos entre nomes iguais de classes
-});
-
-// tem que ser nessa ordem o authentication e authorization
-builder.Services
-    .AddAuthentication(IdentityConstants.ApplicationScheme)
-    .AddIdentityCookies(); // informar qual o tipo de autenticação (jwt, identity, etc)
-
-builder.Services.AddAuthorization();
-
-builder.Services.AddDbContext<AppDbContext>(x => 
-    {
-        x.UseSqlServer(Configuration.ConnectionString);
-    });
-
-builder.Services
-    .AddIdentityCore<User>()
-    .AddRoles<IdentityRole<long>>()
-    .AddEntityFrameworkStores<AppDbContext>()
-    .AddApiEndpoints();
-
-builder.Services.Configure<JsonOptions>(options =>
-{
-    options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-});
-
-builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-builder.Services.AddProblemDetails();
-
-builder.Services.AddTransient<ICategoryHandler, CategoryHandler>();
-builder.Services.AddTransient<ITransactionHandler, TransactionHandler>();
+builder.AddSecurity();
+builder.AddDataContexts();
+builder.AddCrossOrigin();
+builder.AddDocumentation();
+builder.AddServices();
+builder.AddSerializationConfiguration();
+builder.AddErrorHandlers();
 
 var app = builder.Build();
 
