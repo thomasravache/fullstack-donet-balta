@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Dima.Api;
 using Dima.Api.Common.Api;
 using Dima.Api.Endpoints;
 using Dima.Api.Models;
@@ -23,6 +24,7 @@ if (app.Environment.IsDevelopment())
     app.ConfigureDevEnvironment();
 }
 
+app.UseCors(ApiConfiguration.CorsPolicyName);
 app.UseSecurity();
 
 app.UseErrorHandlers();
