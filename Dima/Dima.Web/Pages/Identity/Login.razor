@@ -2,6 +2,7 @@
 @attribute [Route(PageRoutes.Login)]
 
 @layout HeadlessLayout
+@inherits LoginComponentBase
 
 <PageTitle>Dima - Entrar</PageTitle>
 
@@ -11,7 +12,26 @@
             <div class="d-flex justify-center py-8">
                 <img src="img/dima.png" alt="Dima - Controle Financeiro" width="200">
             </div>
-            <h1>Autentique-se</h1>
+
+            <MudForm @ref="MudFormRef">
+                <MudTextField
+                    T="string"
+                    InputType="InputType.Email"
+                    Label="E-mail"
+                    Required="true"
+                    RequiredError="Informe o e-mail"
+                    Placeholder="email@email.com"
+                    Validation="() => GetEmailValidator()"
+                />
+
+                <MudTextField
+                    T="string"
+                    InputType="InputType.Password"
+                    Label="Senha"
+                    Required="true"
+                    RequiredError="Informe a senha"
+                />
+            </MudForm>
         </MudPaper>
     </MudItem>
 </MudGrid>
