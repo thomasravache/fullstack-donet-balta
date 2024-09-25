@@ -1,10 +1,10 @@
-@* @page "/login" *@
-@attribute [Route(PageRoutes.Login)]
+@* @page "/comecar" *@
+@attribute [Route(PageRoutes.Comecar)]
 
 @layout HeadlessLayout
-@inherits LoginComponentBase
+@inherits RegisterComponentBase
 
-<PageTitle>Dima - Entrar</PageTitle>
+<PageTitle>Dima - Começar</PageTitle>
 
 <MudGrid Justify="Justify.Center">
     <MudItem xs="12" sm="12" md="8" lg="6" xl="6">
@@ -34,9 +34,9 @@
             </MudForm>
 
             <div class="d-flex mt-8">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary">Entrar</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary">COMEÇAR</MudButton>
                 <MudSpacer />
-                <MudButton Href="/comecar">Registrar</MudButton>
+                <MudButton Href="/login">JÁ TENHO UMA CONTA</MudButton>
             </div>
         </MudPaper>
     </MudItem>
