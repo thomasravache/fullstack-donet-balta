@@ -1,6 +1,6 @@
 namespace Dima.Web.Pages.Identity;
 
-public class LoginComponentBase : ComponentBase
+public class RegisterComponentBase : ComponentBase
 {
     #region Refs
     protected MudForm? MudFormRef { get; set; }

@@ -1,0 +1,43 @@
+@* @page "/comecar" *@
+@attribute [Route(PageRoutes.Comecar)]
+
+@layout HeadlessLayout
+@inherits RegisterComponentBase
+
+<PageTitle>Dima - Começar</PageTitle>
+
+<MudGrid Justify="Justify.Center">
+    <MudItem xs="12" sm="12" md="8" lg="6" xl="6">
+        <MudPaper Class="mud-width-full pa-8">
+            <div class="d-flex justify-center py-8">
+                <img src="img/dima.png" alt="Dima - Controle Financeiro" width="200">
+            </div>
+
+            <MudForm @ref="MudFormRef">
+                <MudTextField
+                    T="string"
+                    InputType="InputType.Email"
+                    Label="E-mail"
+                    Required="true"
+                    RequiredError="Informe o e-mail"
+                    Placeholder="email@email.com"
+                    Validation="() => GetEmailValidator()"
+                />
+
+                <MudTextField
+                    T="string"
+                    InputType="InputType.Password"
+                    Label="Senha"
+                    Required="true"
+                    RequiredError="Informe a senha"
+                />
+            </MudForm>
+
+            <div class="d-flex mt-8">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary">COMEÇAR</MudButton>
+                <MudSpacer />
+                <MudButton Href="/login">JÁ TENHO UMA CONTA</MudButton>
+            </div>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
