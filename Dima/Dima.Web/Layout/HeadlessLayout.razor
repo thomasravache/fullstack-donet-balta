@@ -1,9 +1,10 @@
 @inherits LayoutComponentBase
 
+
 @* Todo layout do mudblazor precisa de um themeprovider *@
 @* Pra exibir modais também precisa de um provider (dialogprovider) *@
 
-<MudThemeProvider /> @* vai criar uma paleta de cores padrao que pode ser costumizada *@
+<MudThemeProvider Theme="Configuration.Theme"/> @* vai criar uma paleta de cores com o que foi personalizado (deixar sem nada para o padrão) *@
 @* <MudDialogProvider />  *@
 <MudSnackbarProvider />
 
