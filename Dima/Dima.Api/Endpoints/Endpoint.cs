@@ -34,6 +34,9 @@ public static class Endpoint
             .MapEndpoint<GetRolesEndpoint>()
             .MapIdentityApi<User>(); // endpoints padrão do Identity;
 
+        // Quando usamos o MapIdentityApi quer dizer que estamos utilizando os endpoints padrão do identity
+            // é possível fazer isso customizado e mapear da forma que você quiser
+
         endpoints.MapGroup("v{version:apiVersion}/categories")
             .WithTags("Categories")
             .RequireAuthorization()
