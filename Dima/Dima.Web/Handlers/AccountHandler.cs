@@ -11,7 +11,12 @@ public class AccountHandler(IHttpClientFactory httpClientFactory) : IAccountHand
 
     public async Task<Response<string>> LoginAsync(LoginRequest request)
     {
-        var result = await _client.PostAsJsonAsync("v1/identity/login", request);
+        var result = await _client
+            .PostAsJsonAsync("v1/identity/login?useCookies=true", request);
+
+        return result.IsSuccessStatusCode
+            ? Response<string>.Success("Login Realizado com Sucesso", "Login Realizado com Sucesso")
+            : Response<string>.Failure("Usuário ou senha inválidos");
     }
 
     public Task LogoutAsync()
