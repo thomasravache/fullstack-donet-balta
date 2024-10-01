@@ -36,13 +36,34 @@ public class CookieAuthenticationStateProvider(
         }
     }
 
-    private async Task<List<Claim> GetClaims(User user)
+    private async Task<List<Claim>> GetClaims(User user)
     {
         var claims = new List<Claim>
         {
             new(ClaimTypes.Name, user.Email),
             new(ClaimTypes.Email, user.Email) // Name é o identificador do usuário que estamos passando o email no caso
         };
+
+        claims.AddRange(user.Claims
+            .Where(x => x.Key != ClaimTypes.Name && x.Key != ClaimTypes.Email)
+            .Select(x => new Claim(x.Key, x.Value))
+        );
+
+        RoleClaim[]? roles;
+        try
+        {
+            roles = await _client.GetFromJsonAsync<RoleClaim[]>("v1/identity/roles");
+        }
+        catch
+        {
+            return claims;
+        }
+
+        foreach (var role in roles ?? [])
+        {
+            if (!string.IsNullOrEmpty(role.Type) && !string.IsNullOrEmpty(role.Value))
+                claims.Add(new Claim(role.Type, role.Value, role.ValueType, role.Issuer, role.OriginalIssuer));
+        }
 
         return claims;
     }
