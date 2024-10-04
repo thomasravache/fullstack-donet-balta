@@ -1,7 +1,11 @@
+using Dima.Web.Security;
+
 namespace Dima.Web.Pages.Identity;
 
-public class RegisterComponentBase : ComponentBase
+public partial class RegisterComponentBase : ComponentBase
 {
+    [Inject] CookieAuthenticationStateProvider AuthState { get; init; } = null!;
+
     #region Refs
     protected MudForm? MudFormRef { get; set; }
     #endregion
