@@ -3,9 +3,9 @@ namespace Dima.Web;
 public static class Configuration
 {
     public const string HttpClientName = "dima";
-    public const string BackendUrl = "http://localhost:5272";
 
-    public static MudTheme Theme = new()
+    public static string BackendUrl { get; set; } = string.Empty;
+    public static MudTheme Theme { get; private set; } = new()
     {
         Typography = new Typography
         {
