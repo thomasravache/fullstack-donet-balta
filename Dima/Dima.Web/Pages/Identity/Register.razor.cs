@@ -1,10 +1,16 @@
-using Dima.Web.Security;
+using Dima.Core.Handlers;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Dima.Web.Pages.Identity;
 
 public partial class RegisterComponentBase : ComponentBase
 {
-    [Inject] CookieAuthenticationStateProvider AuthState { get; init; } = null!;
+    #region Injections
+    [Inject] private IAccountHandler AccountHandler { get; init; } = null!;
+    [Inject] private ISnackbar Snackbar { get; init; } = null!;
+    [Inject] private NavigationManager NavigationManager { get; init; } = null!;
+    [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; init; } = null!;
+    #endregion
 
     #region Refs
     protected MudForm? MudFormRef { get; set; }

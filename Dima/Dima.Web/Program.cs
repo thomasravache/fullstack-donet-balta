@@ -4,6 +4,8 @@ using Dima.Web;
 using MudBlazor.Services;
 using Dima.Web.Security;
 using Microsoft.AspNetCore.Components.Authorization;
+using Dima.Core.Handlers;
+using Dima.Web.Handlers;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -29,6 +31,6 @@ builder.Services.AddHttpClient(Configuration.HttpClientName, options =>
 })
     .AddHttpMessageHandler<CookieHandler>(); // interceptar mensagens de ida e de vinda podendeo inspecionar os cookies a cada mensagem
 
-
+builder.Services.AddTransient<IAccountHandler, AccountHandler>();
 
 await builder.Build().RunAsync();
