@@ -36,7 +36,7 @@ public partial class RegisterComponentBase : ComponentBase
     #region Methods
     protected static EmailAddressAttribute GetEmailValidator() => new() { ErrorMessage = "E-mail Inválido" };
 
-    public async Task OnValidSubmitAsync()
+    protected async Task OnValidSubmitAsync()
     {
         IsBusy = true;
 

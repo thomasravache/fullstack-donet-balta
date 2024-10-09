@@ -13,31 +13,39 @@
                 <img src="img/dima.png" alt="Dima - Controle Financeiro" width="200">
             </div>
 
-            <MudForm @ref="MudFormRef">
+            <EditForm Model="@InputModel" OnValidSubmit="OnValidSubmitAsync">
+                <DataAnnotationsValidator />
                 <MudTextField
                     T="string"
                     InputType="InputType.Email"
                     Label="E-mail"
-                    Required="true"
-                    RequiredError="Informe o e-mail"
-                    Placeholder="email@email.com"
-                    Validation="() => GetEmailValidator()"
+                    HelperText="Campo obrigatório"
+                    For="@(() => InputModel.Email)"
+                    @bind-Value="InputModel.Email"
                 />
 
                 <MudTextField
                     T="string"
                     InputType="InputType.Password"
                     Label="Senha"
-                    Required="true"
-                    RequiredError="Informe a senha"
+                    HelperText="Campo obrigatório"
+                    For="@(() => InputModel.Password)"
+                    @bind-Value="InputModel.Password"
                 />
-            </MudForm>
 
-            <div class="d-flex mt-8">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary">COMEÇAR</MudButton>
-                <MudSpacer />
-                <MudButton Href="/login">JÁ TENHO UMA CONTA</MudButton>
-            </div>
+                <div class="d-flex mt-8">
+                    @if (IsBusy)
+                    {
+                        <MudProgressCircular Color="Color.Info" Indeterminate="true" />
+                    }
+                    else
+                    {
+                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">COMEÇAR</MudButton>
+                        <MudSpacer />
+                        <MudButton Href="/login">JÁ TENHO UMA CONTA</MudButton>
+                    }
+                </div>
+            </EditForm>
         </MudPaper>
     </MudItem>
 </MudGrid>
