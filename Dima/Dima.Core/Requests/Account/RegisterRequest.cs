@@ -4,9 +4,9 @@ namespace Dima.Core.Requests.Account;
 
 public class RegisterRequest
 {
-    [Required(ErrorMessage = "E-mail")]
+    [Required(ErrorMessage = "Informe o E-mail")]
     [EmailAddress(ErrorMessage = "E-mail Inválido")]
     public string Email { get; set; } = string.Empty;
-    [Required(ErrorMessage = "Senha Inválida")]
+    [Required(ErrorMessage = "Informe a Senha")]
     public string Password { get; set; } = string.Empty;
 }

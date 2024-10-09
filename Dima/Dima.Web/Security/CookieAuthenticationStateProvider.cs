@@ -44,7 +44,7 @@ public class CookieAuthenticationStateProvider(
     {
         try
         {
-            return await _client.GetFromJsonAsync<User?>("v1/identity/manage/info");
+            return await _client.GetFromJsonAsync<User?>("api/v1/identity/manage/info");
         }
         catch
         {
@@ -68,7 +68,7 @@ public class CookieAuthenticationStateProvider(
         RoleClaim[]? roles;
         try
         {
-            roles = await _client.GetFromJsonAsync<RoleClaim[]>("v1/identity/roles");
+            roles = await _client.GetFromJsonAsync<RoleClaim[]>("api/v1/identity/roles");
         }
         catch
         {
