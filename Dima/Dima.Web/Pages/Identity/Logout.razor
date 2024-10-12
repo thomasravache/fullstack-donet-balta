@@ -5,15 +5,17 @@
 
 <PageTitle>Dima - Sair</PageTitle>
 
-<MudText Typo="Typo.h3">Finalizando Sessão...</MudText>
+<MudText Typo="Typo.h3">Sessão Finalizada</MudText>
 <MudPaper Class="pa-8 mt-4">
     <div class="d-flex justify-center pb-8 pt-8">
         <img src="img/dima.png" alt="Dima - Seu Controle Financeiro" width="200" />
     </div>
     <MudAlert Severity="Severity.Info">
-        Finalizando a sessão...
-        <MudButton Variant="Variant.Text" Href="@PageRoutes.Home">
-            IR PARA TELA DE LOGIN
-        </MudButton>
+        <div>
+            Sessão finalizada.
+            <MudButton Variant="Variant.Text" Href="@PageRoutes.Login">
+                IR PARA TELA DE LOGIN
+            </MudButton>
+        </div>
     </MudAlert>
 </MudPaper>

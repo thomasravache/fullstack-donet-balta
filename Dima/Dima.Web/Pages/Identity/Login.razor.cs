@@ -19,7 +19,7 @@ public partial class LoginComponentBase : ComponentBase
 
     #region Props
     protected bool IsBusy { get; set; } = false;
-    protected RegisterRequest InputModel { get; set; } = new();
+    protected LoginRequest InputModel { get; set; } = new();
     #endregion
 
     #region LifeCycle
@@ -41,7 +41,7 @@ public partial class LoginComponentBase : ComponentBase
 
         try
         {
-            var result = await AccountHandler.RegisterAsync(InputModel);
+            var result = await AccountHandler.LoginAsync(InputModel);
 
             if (result.IsSuccess)
             {
