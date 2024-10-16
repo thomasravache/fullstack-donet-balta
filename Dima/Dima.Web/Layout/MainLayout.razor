@@ -9,13 +9,28 @@
     <Authorized>
         <MudLayout>
             <MudAppBar>
+                <MudIconButton
+                    Icon="@Icons.Material.Filled.Menu"
+                    Color="Color.Inherit"
+                    Edge="Edge.Start"
+                    OnClick="ToggleDrawerOpen"
+                />
                 Dima
                 <MudSpacer />
                 <MudText Typo="Typo.caption">
                     @context.User.Identity?.Name
                 </MudText>
-                <MudSwitch @bind-Value="IsDarkMode" />
+                <MudSwitch
+                    @bind-Value="IsDarkMode"
+                    Color="Color.Inherit"
+                    Class="ma-4"
+                    T="bool"
+                    ThumbIcon="@Icons.Material.TwoTone.Lightbulb"
+                />
             </MudAppBar>
+            <MudDrawer @bind-Open="IsDrawerOpened">
+                <h3>Nav Menu</h3>
+            </MudDrawer>
             <MudMainContent>
                 <MudContainer>
                     @Body

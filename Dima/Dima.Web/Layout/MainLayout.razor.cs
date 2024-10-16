@@ -4,6 +4,7 @@ public class MainLayoutComponentBase : LayoutComponentBase
 {
     #region Properties
     protected bool IsDarkMode { get; set; }
+    protected bool IsDrawerOpened { get; set; } = true;
     #endregion
 
     #region Refs
@@ -30,5 +31,7 @@ public class MainLayoutComponentBase : LayoutComponentBase
 
         return Task.CompletedTask;
     }
+
+    protected void ToggleDrawerOpen() => IsDrawerOpened = !IsDrawerOpened;
     #endregion
 }
