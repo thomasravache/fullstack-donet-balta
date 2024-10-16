@@ -1,6 +1,6 @@
 using Dima.Core.Handlers;
 using Dima.Core.Requests.Account;
-using Microsoft.AspNetCore.Components.Authorization;
+using Dima.Web.Security;
 
 namespace Dima.Web.Pages.Identity;
 
@@ -10,7 +10,7 @@ public partial class RegisterComponentBase : ComponentBase
     [Inject] private IAccountHandler AccountHandler { get; init; } = null!;
     [Inject] private ISnackbar Snackbar { get; init; } = null!;
     [Inject] private NavigationManager NavigationManager { get; init; } = null!;
-    [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; init; } = null!;
+    [Inject] private ICookieAuthenticationStateProvider AuthenticationStateProvider { get; init; } = null!;
     #endregion
 
     #region Refs
@@ -34,7 +34,6 @@ public partial class RegisterComponentBase : ComponentBase
     #endregion
 
     #region Methods
-    protected static EmailAddressAttribute GetEmailValidator() => new() { ErrorMessage = "E-mail Inválido" };
 
     protected async Task OnValidSubmitAsync()
     {
