@@ -1,6 +1,4 @@
-﻿@using Dima.Web.Components.Identity
-
-@inherits MainLayoutComponentBase
+﻿@inherits MainLayoutComponentBase
 
 <MudThemeProvider @ref="MudThemeProviderRef"  @bind-IsDarkMode="IsDarkMode" Theme="Configuration.Theme"/> @* vai criar uma paleta de cores com o que foi personalizado (deixar sem nada para o padrão) *@
 @* <MudDialogProvider />  *@
@@ -29,7 +27,7 @@
                 />
             </MudAppBar>
             <MudDrawer @bind-Open="IsDrawerOpened">
-                <h3>Nav Menu</h3>
+                <NavMenu />
             </MudDrawer>
             <MudMainContent>
                 <MudContainer>
