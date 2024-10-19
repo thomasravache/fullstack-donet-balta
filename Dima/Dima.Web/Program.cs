@@ -32,5 +32,7 @@ builder.Services.AddHttpClient(Configuration.HttpClientName, options =>
     .AddHttpMessageHandler<CookieHandler>(); // interceptar mensagens de ida e de vinda podendeo inspecionar os cookies a cada mensagem
 
 builder.Services.AddTransient<IAccountHandler, AccountHandler>();
+builder.Services.AddTransient<ITransactionHandler, TransactionHandler>();
+builder.Services.AddTransient<ICategoryHandler, CategoryHandler>();
 
 await builder.Build().RunAsync();
