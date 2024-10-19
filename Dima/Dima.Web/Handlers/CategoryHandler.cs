@@ -1,3 +1,5 @@
+using System.Net.Http.Json;
+using System.Text.Json;
 using Dima.Core.Handlers;
 using Dima.Core.Requests.Categories;
 using Dima.Core.Responses;
@@ -5,30 +7,43 @@ using Dima.Core.Responses.Categories;
 
 namespace Dima.Web.Handlers;
 
-public class CategoryHandler : ICategoryHandler
+public class CategoryHandler(IHttpClientFactory httpClientFactory) : ICategoryHandler
 {
-    public Task<Response<CategoryResponse>> CreateAsync(CreateCategoryRequest request)
+    private readonly HttpClient _client = httpClientFactory.CreateClient(Configuration.HttpClientName);
+
+    public async Task<Response<CategoryResponse>> CreateAsync(CreateCategoryRequest request)
     {
-        throw new NotImplementedException();
+        var result = await _client.PostAsJsonAsync("api/v1/categories", request);
+
+        return await result.Content.ReadFromJsonAsync<Response<CategoryResponse>>()
+            ?? Response<CategoryResponse>.Failure("Falha ao criar categoria.");
     }
 
-    public Task<Response<CategoryResponse?>> DeleteAsync(DeleteCategoryRequest request)
+    public async Task<Response<CategoryResponse?>> DeleteAsync(DeleteCategoryRequest request)
     {
-        throw new NotImplementedException();
+        var result = await _client.DeleteAsync($"api/v1/categories/{request.Id}");
+
+        return await result.Content.ReadFromJsonAsync<Response<CategoryResponse?>>()
+            ?? Response<CategoryResponse?>.Failure("Falha ao excluir categoria.");
     }
 
-    public Task<Response<PagedResult<CategoryResponse>>> GetAllAsync(GetAllCategoriesRequest request)
+    public async Task<Response<PagedResult<CategoryResponse>>> GetAllAsync(GetAllCategoriesRequest request)
     {
-        throw new NotImplementedException();
+        return await _client.GetFromJsonAsync<Response<PagedResult<CategoryResponse>>>("v1/categories")
+            ?? Response<PagedResult<CategoryResponse>>.Failure("Falha ao obter categorias");   
     }
 
-    public Task<Response<CategoryResponse?>> GetByIdAsync(GetCategoryByIdRequest request)
+    public async Task<Response<CategoryResponse?>> GetByIdAsync(GetCategoryByIdRequest request)
     {
-        throw new NotImplementedException();
+        return await _client.GetFromJsonAsync<Response<CategoryResponse?>>($"v1/categories/{request.Id}")
+            ?? Response<CategoryResponse?>.Failure("Falha ao obter categoria por Id");
     }
 
-    public Task<Response<CategoryResponse?>> UpdateAsync(UpdateCategoryRequest request)
+    public async Task<Response<CategoryResponse?>> UpdateAsync(UpdateCategoryRequest request)
     {
-        throw new NotImplementedException();
+        var result = await _client.PutAsJsonAsync($"api/v1/categories/{request.Id}", request);
+
+        return await result.Content.ReadFromJsonAsync<Response<CategoryResponse?>>()
+            ?? Response<CategoryResponse?>.Failure("Falha ao atualizar categoria.");
     }
 }
