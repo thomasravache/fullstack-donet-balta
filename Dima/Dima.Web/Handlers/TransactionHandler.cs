@@ -12,14 +12,20 @@ public class TransactionHandler(IHttpClientFactory httpClientFactory) : ITransac
 {
     private readonly HttpClient _client = httpClientFactory.CreateClient(Configuration.HttpClientName);
 
-    public Task<Response<TransactionResponse>> CreateAsync(CreateTransactionRequest request)
+    public async Task<Response<TransactionResponse>> CreateAsync(CreateTransactionRequest request)
     {
-        throw new NotImplementedException();
+        var result = await _client.PostAsJsonAsync("api/v1/transactions", request);
+
+        return await result.Content.ReadFromJsonAsync<Response<TransactionResponse>>()
+            ?? Response<TransactionResponse>.Failure("Falha ao criar transação");
     }
 
-    public Task<Response<TransactionResponse?>> DeleteAsync(DeleteTransactionRequest request)
+    public async Task<Response<TransactionResponse?>> DeleteAsync(DeleteTransactionRequest request)
     {
-        throw new NotImplementedException();
+        var result = await _client.DeleteAsync($"api/v1/transactions/{request.Id}");
+
+        return await result.Content.ReadFromJsonAsync<Response<TransactionResponse?>>()
+            ?? Response<TransactionResponse?>.Failure("Falha ao excluir transação");
     }
 
     public Task<Response<PagedResult<TransactionResponse>>> GetAllAsync(GetAllTransactionsRequest request)
@@ -27,9 +33,10 @@ public class TransactionHandler(IHttpClientFactory httpClientFactory) : ITransac
         throw new NotImplementedException();
     }
 
-    public Task<Response<TransactionResponse?>> GetByIdAsync(GetTransactionByIdRequest request)
+    public async Task<Response<TransactionResponse?>> GetByIdAsync(GetTransactionByIdRequest request)
     {
-        throw new NotImplementedException();
+        return await _client.GetFromJsonAsync<Response<TransactionResponse?>>($"api/v1/transactions/{request.Id}")
+            ?? Response<TransactionResponse?>.Failure("Falha ao obter transação por Id");
     }
 
     public async Task<Response<PagedResult<TransactionResponse>>> GetByPeriodAsync(GetTransactionByPeriodRequest request)
@@ -55,8 +62,11 @@ public class TransactionHandler(IHttpClientFactory httpClientFactory) : ITransac
             ?? Response<PagedResult<TransactionResponse>>.Failure("Falha ao obter transações por período");
     }
 
-    public Task<Response<TransactionResponse?>> UpdateAsync(UpdateTransactionRequest request)
+    public async Task<Response<TransactionResponse?>> UpdateAsync(UpdateTransactionRequest request)
     {
-        throw new NotImplementedException();
+        var result = await _client.PutAsJsonAsync($"api/v1/transactions/{request.Id}", request);
+
+        return await result.Content.ReadFromJsonAsync<Response<TransactionResponse?>>()
+            ?? Response<TransactionResponse?>.Failure("Falha ao atualizar transação");
     }
 }
