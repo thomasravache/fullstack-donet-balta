@@ -8,5 +8,6 @@ public static class PageRoutes
     public const string Comecar = "/comecar";
     public const string LancamentosHistorico = "/lancamentos/historico";
     public const string Categorias = "/categorias";
+    public const string CategoriasAdicionar = "/categorias/adicionar";
     public const string Premium = "/premium";
 }
