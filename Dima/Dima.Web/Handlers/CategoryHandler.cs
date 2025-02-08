@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using Dima.Core.Common.Utils;
 using Dima.Core.Handlers;
 using Dima.Core.Requests.Categories;
 using Dima.Core.Responses;
@@ -28,13 +29,19 @@ public class CategoryHandler(IHttpClientFactory httpClientFactory) : ICategoryHa
 
     public async Task<Response<PagedResult<CategoryResponse>>> GetAllAsync(GetAllCategoriesRequest request)
     {
-        return await _client.GetFromJsonAsync<Response<PagedResult<CategoryResponse>>>("v1/categories")
-            ?? Response<PagedResult<CategoryResponse>>.Failure("Falha ao obter categorias");   
+        string query = new QueryStringBuilder()
+            .AddQueryParameters(request)
+            .BuildQuery() ?? string.Empty;
+
+        string url = "api/v1/categories" + query;
+
+        return await _client.GetFromJsonAsync<Response<PagedResult<CategoryResponse>>>(url)
+            ?? Response<PagedResult<CategoryResponse>>.Failure("Falha ao obter categorias");
     }
 
     public async Task<Response<CategoryResponse?>> GetByIdAsync(GetCategoryByIdRequest request)
     {
-        return await _client.GetFromJsonAsync<Response<CategoryResponse?>>($"v1/categories/{request.Id}")
+        return await _client.GetFromJsonAsync<Response<CategoryResponse?>>($"api/v1/categories/{request.Id}")
             ?? Response<CategoryResponse?>.Failure("Falha ao obter categoria por Id");
     }
 
