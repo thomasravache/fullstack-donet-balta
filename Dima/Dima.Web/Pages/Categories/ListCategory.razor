@@ -1,0 +1,13 @@
+@* @page "/categorias" *@
+@attribute [Route(PageRoutes.Categorias)]
+
+@inherits ListCategoryComponentBase
+
+<MudText Typo="Typo.h3">Categorias</MudText>
+
+<ul>
+    @foreach (var category in PagedCategories.Items)
+    {
+        <li>@category.Title</li>
+    }
+</ul>

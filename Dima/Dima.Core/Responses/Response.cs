@@ -2,6 +2,8 @@ namespace Dima.Core.Responses;
 
 public class Response<TData>
 {
+    public Response() { }
+
     public Response(bool isSuccess, TData? data, string? message = null)
     {
         Data = data;
@@ -23,7 +25,7 @@ public class Response<TData>
     public TData? Data { get; set; }
     public List<string> Messages { get; set; } = [];
     public string? PrincipalMessage => Messages.FirstOrDefault();
-    public bool IsSuccess { get; }
+    public bool IsSuccess { get; set; }
     public bool IsFailure => !IsSuccess;
 
     public static Response<TData> Failure(string message)

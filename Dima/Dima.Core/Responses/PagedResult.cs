@@ -8,4 +8,13 @@ public class PagedResult<TData>
     public required int CurrentPage { get; set; }
     public required int PageSize { get; set; }
     public int TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
+
+    public static PagedResult<TData> EmptyResult()
+        => new()
+        {
+            CurrentPage = default,
+            Items = [],
+            PageSize = default,
+            TotalCount = default
+        };
 }
